@@ -3,6 +3,7 @@ import requests
 from requests.exceptions import ReadTimeout, ConnectionError
 import telegram
 import time
+import logging
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
@@ -12,6 +13,8 @@ AUTHORIZATION_HEADER = {'Authorization': f'Token {DVMN_TOKEN}'}
 
 def main():
     bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
+    bot.send_message(chat_id=CHAT_ID, text='I woke up!')
+    logging.error('Hi, everybody!')
     timestamp = None
     params = {}
     while True:
