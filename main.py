@@ -24,16 +24,16 @@ class TelegramLogsHandler(logging.Handler):
 
 def main():
     logger = logging.getLogger(__name__)
-    # logger.setLevel(logging.INFO)
+    logger.setLevel(logging.INFO)
     logger.addHandler(TelegramLogsHandler(TELEGRAM_BOT_TOKEN, CHAT_ID))
 
     bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
-    logger.warning("I've woke up!")
+    logger.warning("I've woken up!")
     timestamp = None
     params = {}
     while True:
-        logger.warning('new iteration')
         try:
+            logger.debug('new iteration')
             if timestamp:
                 params = {'timestamp': timestamp}
             response = requests.get('https://dvmn.org/api/long_polling/', headers=AUTHORIZATION_HEADER, params=params)
@@ -52,10 +52,13 @@ def main():
                     bot.send_message(chat_id=CHAT_ID, text=text)
 
         except ReadTimeout:
-            print('ReadTimeout exception')
+            logger.exception('Произошёл ReadTimeout', exc_info=False)
             time.sleep(60)
         except ConnectionError:
-            print('ConnectionError exception')
+            logger.exception('Произошёл ConnectionError', exc_info=False)
+            time.sleep(60)
+        except Exception:
+            logger.exception('Шеф, усё пропало!', exc_info=True)
             time.sleep(60)
 
 
