@@ -18,6 +18,7 @@ def main():
     timestamp = None
     params = {}
     while True:
+        print('new iteration')
         try:
             if timestamp:
                 params = {'timestamp': timestamp}
