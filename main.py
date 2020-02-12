@@ -11,14 +11,28 @@ DVMN_TOKEN = os.getenv('DVMN_TOKEN')
 AUTHORIZATION_HEADER = {'Authorization': f'Token {DVMN_TOKEN}'}
 
 
+class TelegramLogsHandler(logging.Handler):
+    def __init__(self, token, chat_id):
+        super().__init__()
+        self.bot = telegram.Bot(token=token)
+        self.chat_id = chat_id
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.bot.send_message(chat_id=self.chat_id, text=log_entry)
+
+
 def main():
+    logger = logging.getLogger(__name__)
+    # logger.setLevel(logging.INFO)
+    logger.addHandler(TelegramLogsHandler(TELEGRAM_BOT_TOKEN, CHAT_ID))
+
     bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
-    bot.send_message(chat_id=CHAT_ID, text='I woke up!')
-    logging.error('Hi, everybody!')
+    logger.warning("I've woke up!")
     timestamp = None
     params = {}
     while True:
-        print('new iteration')
+        logger.warning('new iteration')
         try:
             if timestamp:
                 params = {'timestamp': timestamp}
