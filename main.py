@@ -53,7 +53,6 @@ def main():
 
         except ReadTimeout:
             logger.exception('Произошёл ReadTimeout', exc_info=False)
-            time.sleep(60)
         except ConnectionError:
             logger.exception('Произошёл ConnectionError', exc_info=False)
             time.sleep(60)
